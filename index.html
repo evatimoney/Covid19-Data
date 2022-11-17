@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vega-Lite Bar Chart</title>
+    <meta charset="utf-8" />
+     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+
+    <!-- CSS Reset -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+
+    <!-- Milligram CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css"> 
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.18.2"></script>
+    
+
+    <style media="screen">
+      /* Add space between Vega-Embed links  */
+      .vega-actions a {
+        margin-right: 5px;
+      }
+    </style>
+  </head>
+   <body>
+    <h1>Covid-19 Data</h1>
+    <!-- Container for the visualization -->
+    <div id="vis"></div>
+     
+      <script>
+         var vlSpec=
+             {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  
+  "data": {"url": "https://raw.githubusercontent.com/bcviscourse/datasets/master/lab9-covidtracking.csv"},
+   "vconcat": [
+  
+{
+  "width": 600,
+  "height": 300,
+  "params": [{
+  "name":"brush",
+  "select": {"type": "interval"}
+}],
+  "mark": {"type" : "point",  "tooltip": true },
+  "encoding": {
+    "x": {"field": "positive", "type": "quantitative"},
+    "y": {"field": "death", "type": "quantitative"},
+ "color": {"field": "dataQualityGrade", "type": "nominal"}
+  }
+  
+  },
+
+  {
+ "repeat": ["hospitalizedCumulative", "recovered"],
+"columns": 1,
+
+"spec":{
+  "width": 600,  
+  "height": 150,
+  "transform": [{
+  "filter":{"param":"brush"}
+}],
+      "mark": "bar",
+      "encoding": {
+        "x": {
+  
+          "field": "state",
+          "type": "ordinal"
+        },
+        "y": {
+          "field": {"repeat":"repeat"},
+          "type": "quantitative"
+        }
+      }
+    }
+  }
+   ]
+ }
+ vegaEmbed('#vis', vlSpec);
+    </script>
+  </body>
+</html>
